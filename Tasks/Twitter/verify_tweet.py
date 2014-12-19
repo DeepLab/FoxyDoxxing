@@ -13,7 +13,7 @@ def verify_tweet(uv_task):
 	# look up tweet by id in url
 	from lib.Worker.Models.dl_FD_mention import FoxyDoxxingMention
 
-	mention = FoxyDoxxingMention(_id=uv_task.mention_id)
+	mention = FoxyDoxxingMention(_id=uv_task.doc_id)
 	if not hasattr(mention, 'url'):
 		error_msg = "no url for this tweet"
 
@@ -47,7 +47,7 @@ def verify_tweet(uv_task):
 		uv_task.fail(status=412, message=error_msg)
 		return
 
-	from bs4 import BeautifulSoup
+	from bs4 import BeautifulSoup, element
 
 	original_tweet = None
 	original_tweet_div = None
@@ -78,8 +78,12 @@ def verify_tweet(uv_task):
 	tweet_text_set = ['js-tweet-text', 'tweet-text']
 	for p in div.find_all('p'):
 		if 'class' in p.attrs.keys() and len(set(p.attrs['class']).intersection(tweet_text_set)) == len(p.attrs['class']):
-			original_tweet = "".join(p.contents)
-			break
+			print p
+			try:
+				original_tweet = [c for c in p.children if type(c) is element.NavigableString][0]
+				break
+			except Exception as e:
+				pass
 
 	if original_tweet is None:
 		error_msg = "Could not extract original tweet"

@@ -31,16 +31,20 @@ def screenshot_tweet(uv_task):
 		uv_task.fail(status=412, message=error_msg)
 		return
 
+	import os
 	from fabric.api import settings, local
 	from pyvirtualdisplay import Display
 	from selenium import webdriver
+
+	from conf import MONITOR_ROOT
 
 	try:
 		display = Display(visible=0, size=(800,600))
 		display.start()
 
-		with settiings(warn_only=True):
-			browser = webdriver.PhantomJS(local("which phantomjs", capture=True))
+		with settings(warn_only=True):
+			browser = webdriver.PhantomJS(local("which phantomjs", capture=True),
+				service_log_path=os.path.join(MONITOR_ROOT, "ghostdriver.log"))
 	
 		browser.get(mention.url)
 	except Exception as e:
@@ -57,6 +61,9 @@ def screenshot_tweet(uv_task):
 
 	asset_path = mention.addAsset(None, "cap_%s.png" % generateMD5Hash(content=mention.url),
 		description="Screen Capture from %s" % mention.url, tags=[ASSET_TAGS['FD_CAP']])
+
+	print "SAVING SCREENCAP TO:"
+	print asset_path
 	
 	browser.save_screenshot(asset_path)
 	

@@ -110,7 +110,7 @@ def parse_FD_email(uv_task):
 
 	from urllib import unquote
 
-	mention.url = unquote(mention_href).decode('utf8')
+	mention.url = unquote(mention_href).decode('utf8').split("&")[0]
 	mention.save()
 
 	from time import time

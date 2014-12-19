@@ -7,7 +7,10 @@ from conf import DEBUG
 class DLTwitterer(UnveillanceELSStub, TwitterClient):
 	def __init__(self, inflate=None, _id=None):
 		self.els_doc_root = "dl_twitterer"
-		emit_sentinels = [EmitSentinel("config", "dict", None), EmitSentinel("service", "Api", None)]
+		emit_sentinels = [
+			EmitSentinel("config", "dict", None), 
+			EmitSentinel("service", "Api", None),
+			EmitSentinel("usable", "bool", None)]
 
 		TwitterClient.__init__(self)
 
