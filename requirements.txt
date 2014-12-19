@@ -1,9 +1,9 @@
 pexpect
 unidecode
 jsonrpclib
-gensim
-pypuzzle
 google-api-python-client
 python-twitter
+gensim
+pypuzzle
 pyvirtualdisplay
 selenium

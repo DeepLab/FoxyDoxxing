@@ -17,7 +17,7 @@ sleep 2
 
 cd $THIS_DIR
 
-sudo apt-get install -y libgd2-xpm-dev libpuzzle-dev libjpeg62 xcfb xserver-xephyr phantomjs
+sudo apt-get install -y libgd2-xpm-dev libpuzzle-dev libjpeg62 xvfb xserver-xephyr phantomjs
 pip install --upgrade -r requirements.txt
 python setup.py
 
