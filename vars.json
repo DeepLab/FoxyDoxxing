@@ -1,0 +1,90 @@
+{
+	"ASSET_TAGS" : {
+		"PAGE_MAP" : "uv_page_map",
+		"GM_D" : "gensim_dict",
+		"GM_MM" : "gensim_corpus_mm",
+		"GM_LSI" : "gensim_lsi_model",
+		"GM_TOPICS" : "gensim_lsi_topics",
+		"IMAGE_CVEC" : "libpuzzle_vector",
+		"FD_CAP" : "foxydoxxing_screen_capture"
+	},
+	"ELASTICSEARCH_MAPPING_STUBS": {
+		"dl_fd_mention_content_text" : {
+			"properties" : {
+				"searchable_text" : {
+					"type" : "string"
+				},
+				"media_id" : {
+					"type" : "string",
+					"index" : "not_analyzed"
+				}
+			},
+			"_parent" : {
+				"type" : "uv_document"
+			}
+		},
+		"dl_twitterer" : {
+			"properties" : {
+				"screen_name" : {
+					"type" : "string"
+				}
+			}
+		}
+	},
+	"QUERY_DEFAULTS" : {
+		"DL_FD_MENTION_CONTENT_TEXT" : {
+			"bool" : {
+				"must_not" : [
+					{
+						"constant_score" : {
+							"filter" : {
+								"missing" : {
+									"field" : "dl_fd_mention_content_text.media_id"
+								}
+							}
+						}
+					}
+				],
+				"must" : []
+			}
+		},
+		"DL_TWITTERER" : {
+			"bool" : {
+				"must_not" : [
+					{
+						"constant_score" : {
+							"filter" : {
+								"missing" : {
+									"field" : "dl_twitterer.screen_name"
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	"QUERY_KEYS" : {
+		"filter_terms" : ["index_in_parent"]
+	},
+	"MIME_TYPES" : {
+		"fd_email" : "foxydoxxing/email",
+		"png" : "image/png"
+	},
+	"MIME_TYPE_MAP" : {
+		"foxydoxxing/email" : "fd_email",
+		"image/png" : "png"
+	},
+	"MIME_TYPE_TASKS" : {
+		"application/json" : [
+			"JSON.evaluate_json_media.evaluate_JSON_media"
+		],
+		"foxydoxxing/email" : [
+			"FoxyDoxxing.parse_fd_email.parse_FD_email",
+			"Twitter.verify_tweet.verify_tweet",
+			"Twitter.screenshot_tweet.screenshot_tweet"
+		],
+		"image/png" : ["Avi.analyze_avitar.get_image_vector"],
+		"image/jpeg" : ["Avi.analyze_avitar.get_image_vector"]
+	}
+}
