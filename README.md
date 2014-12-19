@@ -1,8 +1,8 @@
-# Compass-UnveillanceAnnex
+# FoxyDoxxing
 
 ## Setup
 
-1.	After cloning this repo, `cd /path/to/CompassAnnex` and pull down the necessary submodules with
+1.	After cloning this repo, `cd /path/to/FoxyDoxxing` and pull down the necessary submodules with
 	
 	`git submodule update --init --recursive`
 
@@ -29,6 +29,9 @@ You may create a .json config file with any of the following directives to suit 
 *	**uv_uuid (str)**
 	The shortcode for the server
 
+*	**foxydoxxing_client (dict)**
+	Contains the data needed to build your twitter and gmail authentication.  You will need to get an access token, client secret, and all that beforehand.  See the Google Developer API console and Twitter API console for more information.
+
 ## Messaging
 
 The Annex will broadcast the status of all tasks to connected web Frontend clients via websocket.
@@ -41,7 +44,7 @@ Messages from the annex channel will have the following format:
 		"_id" : "c895e95034a4a37eb73b3e691e176d0b",
 		"status" : 302,
 		"doc_id" : "b721079641a39621e08741c815467115",
-		"task_path" : "NLP.gensim.get_topics",
+		"task_path" : "Twitter.screenshot_tweet.screenshot_tweet",
 		"task_type" : "UnveillanceTask"
 	}
 
