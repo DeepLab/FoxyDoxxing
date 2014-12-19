@@ -1,0 +1,3 @@
+[submodule "lib/Annex"]
+	path = lib/Annex
+	url = git@github.com:harlo/UnveillanceAnnex.git
