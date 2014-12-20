@@ -76,15 +76,9 @@ if __name__ == "__main__":
 	config['foxydoxxing_client'] = validate_clients(
 		config['foxydoxxing_client'], base_dir)
 
-	gensim_lib = os.path.join(base_dir, "lib", "gensim_lib")
-	if not os.path.exists(gensim_lib):
-		with settings(warn_only=True):
-			local("mkdir %s" % gensim_lib)
-	
 	try:
 		with open(os.path.join(conf_dir, "annex.config.yaml"), 'ab') as CONF:
 			CONF.write("vars_extras: %s\n" % os.path.join(base_dir, "vars.json"))
-			CONF.write("compass.gensim.training_data: %s\n" % gensim_lib)
 	except Exception as e:
 		pass
 

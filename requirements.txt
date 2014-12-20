@@ -3,7 +3,6 @@ unidecode
 jsonrpclib
 google-api-python-client
 python-twitter
-gensim
 pypuzzle
 pyvirtualdisplay
 selenium
