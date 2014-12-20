@@ -70,7 +70,9 @@ def screenshot_tweet(uv_task):
 		print "SAVING SCREENCAP TO:"
 		print asset_path
 	
-	browser.save_screenshot(asset_path)
+	from conf import ANNEX_DIR
+	
+	browser.save_screenshot(os.path.join(ANNEX_DIR, asset_path))
 	
 	browser.quit()
 	display.stop()
