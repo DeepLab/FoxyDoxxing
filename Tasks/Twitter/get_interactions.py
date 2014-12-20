@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from vars import CELERY_STUB as celery_app
 
 @celery_app.task
-def get_retweets(uv_task):
+def get_interactions(uv_task):
 	task_tag = "TWEETER: GETTING INTERACTIONS"
 
 	print "getting retweets from tweet at %s" % uv_task.doc_id
