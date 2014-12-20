@@ -1,5 +1,9 @@
 # FoxyDoxxing
 
+First, a disclaimer:
+
+This is __not__ security software.  I take security very seriously.  I am absolutely not perfect; none of us are; myself especially.  I've learned to value peer review very highly, and this has not been put through that yet.  I would not advocate using this on anything sensitive yet, and you should take certain cautions in deployment.  This is a swiss-army knife tool I built to get a certain job done.  It's working quite well for me, and I only want it to get better.
+
 ## Setup
 
 1.	After cloning this repo, `cd /path/to/FoxyDoxxing` and pull down the necessary submodules with
