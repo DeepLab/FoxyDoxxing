@@ -14,8 +14,9 @@ class FoxyDoxxingClient(object):
 
 		try:
 			with open(self.config['last_update'], 'rb') as L:
-				self.last_update = int(L.read().strip())
+				self.last_update = float(L.read().strip())
 		except Exception as e:
+			print e
 			self.last_update = 0
 
 		if DEBUG:
@@ -50,6 +51,7 @@ class FoxyDoxxingClient(object):
 			self.usable = False
 
 	def set_last_update(self, time):
+		print "SETTING LAST UPDATE: %d" % time
 		with open(self.config['last_update'], 'wb+') as L:
 			L.write(str(time))
 		

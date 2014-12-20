@@ -36,7 +36,7 @@ def screenshot_tweet(uv_task):
 	from pyvirtualdisplay import Display
 	from selenium import webdriver
 
-	from conf import MONITOR_ROOT
+	from conf import MONITOR_ROOT, DEBUG
 
 	try:
 		display = Display(visible=0, size=(800,600))
@@ -44,7 +44,11 @@ def screenshot_tweet(uv_task):
 
 		with settings(warn_only=True):
 			browser = webdriver.PhantomJS(local("which phantomjs", capture=True),
-				service_log_path=os.path.join(MONITOR_ROOT, "ghostdriver.log"))
+				service_log_path=os.path.join(MONITOR_ROOT, "ghostdriver.log"),
+				service_args=["--ignore-ssl-errors=true", "--ssl-protocol=tlsv1"])
+
+		if DEBUG:
+			print "getting screencap at %s" % mention.url
 	
 		browser.get(mention.url)
 	except Exception as e:
@@ -62,8 +66,9 @@ def screenshot_tweet(uv_task):
 	asset_path = mention.addAsset(None, "cap_%s.png" % generateMD5Hash(content=mention.url),
 		description="Screen Capture from %s" % mention.url, tags=[ASSET_TAGS['FD_CAP']])
 
-	print "SAVING SCREENCAP TO:"
-	print asset_path
+	if DEBUG:
+		print "SAVING SCREENCAP TO:"
+		print asset_path
 	
 	browser.save_screenshot(asset_path)
 	

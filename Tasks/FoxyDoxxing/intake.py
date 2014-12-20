@@ -39,7 +39,6 @@ def do_FD_intake(uv_task):
 
 	try:
 		res = client.service.users().messages().list(**q).execute()
-		client.set_last_update(time())
 	except Exception as e:
 		if DEBUG:
 			print type(e)
@@ -50,6 +49,7 @@ def do_FD_intake(uv_task):
 		uv_task.fail(message=str(e))
 		return
 
+
 	if 'messages' not in res.keys():
 		error_msg = "no messages received"
 
@@ -59,6 +59,7 @@ def do_FD_intake(uv_task):
 		uv_task.fail(message=error_msg)
 		return
 
+	client.set_last_update(time())
 	messages = res['messages']
 	
 	while 'nextPageToken' in res.keys():

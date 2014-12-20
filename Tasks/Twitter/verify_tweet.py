@@ -81,9 +81,10 @@ def verify_tweet(uv_task):
 			print p
 			try:
 				original_tweet = [c for c in p.children if type(c) is element.NavigableString][0]
-				break
 			except Exception as e:
 				pass
+
+			break
 
 	if original_tweet is None:
 		error_msg = "Could not extract original tweet"

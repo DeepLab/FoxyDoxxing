@@ -4,7 +4,7 @@ from vars import CELERY_STUB as celery_app
 
 @celery_app.task
 def get_retweets(uv_task):
-	task_tag = "TWEETER: GETTING RETWEETS"
+	task_tag = "TWEETER: GETTING INTERACTIONS"
 
 	print "getting retweets from tweet at %s" % uv_task.doc_id
 	print "\n\n************** %s [START] ******************\n" % task_tag
