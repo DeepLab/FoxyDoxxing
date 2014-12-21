@@ -99,6 +99,8 @@ def verify_tweet(uv_task):
 	mention.tweet_id = div.attrs['data-item-id']
 	mention.save()
 
+	mention.set_stats()
+	
 	mention.addCompletedTask(uv_task.task_path)
 
 	# tweet is valid.

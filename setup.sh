@@ -19,6 +19,11 @@ cd $THIS_DIR
 
 sudo apt-get install -y libgd2-xpm-dev libpuzzle-dev libjpeg62 xvfb xserver-xephyr phantomjs
 pip install --upgrade -r requirements.txt
+
+cd $THIS_DIR/lib/python-oauth2
+python setup.py install
+
+cd $THIS_DIR
 python setup.py
 
 cd $THIS_DIR/lib/Annex/lib/Worker/Tasks

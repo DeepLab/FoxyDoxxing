@@ -1,3 +1,6 @@
 [submodule "lib/Annex"]
 	path = lib/Annex
 	url = git@github.com:harlo/UnveillanceAnnex.git
+[submodule "lib/python-oauth2"]
+	path = lib/python-oauth2
+	url = git@github.com:simplegeo/python-oauth2.git

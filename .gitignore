@@ -5,3 +5,4 @@ lib/peepdf
 lib/stanford-corenlp/stopwords.json
 lib/stanford-ner-*
 lib/gensim_lib
+lib/python-oauth2

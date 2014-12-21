@@ -28,6 +28,22 @@ def parse_FD_email(uv_task):
 	import re
 	from conf import DEBUG
 
+	in_reply_valid = False
+	try:
+		validaton = [h['value'] for h in email['headers'] if h['name'] == "In-Reply-To"][0]
+		in_reply_valid = re.match(r'.*\.twitter\.com>$', validation) is not None
+	except Exception as e:
+		if DEBUG:
+			print e, type(e)
+
+	if not in_reply_valid:
+		error_msg = "In-Reply-To header does not appear to come from twitter???"
+		print error_msg
+		print "\n\n************** %s [ERROR] ******************\n" % task_tag
+		
+		uv_task.fail(status=412, message=error_msg)
+		return
+
 	m_source = None
 	try:
 		subject = [h['value'] for h in email['headers'] if h['name'] == "Subject"][0]
