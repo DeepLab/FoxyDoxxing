@@ -100,10 +100,13 @@ def verify_tweet(uv_task):
 	mention.save()
 
 	mention.set_stats()
-	
+
 	mention.addCompletedTask(uv_task.task_path)
 
-	# tweet is valid.
+	# tweet is valid.  check its retweets every 10 minutes for 24 hours
+	from time import time
+	uv_task.set_recurring("Twitter.get_retweets.get_retweets", 2, time() + (6 * 60))
+
 	uv_task.routeNext()
 
 	print "\n\n************** %s [END] ******************\n" % task_tag

@@ -8,8 +8,8 @@ from conf import DEBUG
 class FoxyDoxxingMention(UnveillanceDocument, TwitterClient):
 	def __init__(self, _id=None, inflate=None):
 		emit_sentinels = [
-			EmitSentinel("source", "DLTwitterer", "_id"),
-			EmitSentinel("target", "DLTwitterer", "_id"),
+			EmitSentinel("user_source", "DLTwitterer", "_id"),
+			EmitSentinel("user_target", "DLTwitterer", "_id"),
 			EmitSentinel("service", "Api", None),
 			EmitSentinel("config", "dict", None),
 			EmitSentinel("usable", "bool", None)]
@@ -32,9 +32,9 @@ class FoxyDoxxingMention(UnveillanceDocument, TwitterClient):
 		print "GETTING TWEET STATS"
 		stats = self.raw_request("statuses/show.json?id=%s" % self.tweet_id)
 
-		for stat in ['source', 'entities', 'created_as']:
+		for stat in ['source', 'entities', 'created_at']:
 			try:
-				setattr(self, stats[stat])
+				setattr(self, stat, stats[stat])
 			except Exception as e:
 				if DEBUG:
 					print e, type(e)

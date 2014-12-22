@@ -32,35 +32,11 @@ def screenshot_tweet(uv_task):
 		return
 
 	import os
-	from fabric.api import settings, local
-	from pyvirtualdisplay import Display
-	from selenium import webdriver
-
-	from conf import MONITOR_ROOT, DEBUG
-
-	try:
-		display = Display(visible=0, size=(800,600))
-		display.start()
-
-		with settings(warn_only=True):
-			browser = webdriver.PhantomJS(local("which phantomjs", capture=True),
-				service_log_path=os.path.join(MONITOR_ROOT, "ghostdriver.log"),
-				service_args=["--ignore-ssl-errors=true", "--ssl-protocol=tlsv1"])
-
-		if DEBUG:
-			print "getting screencap at %s" % mention.url
 	
-		browser.get(mention.url)
-	except Exception as e:
-		error_msg = "Trouble screenshotting: %s" % e
-
-		print error_msg
-		print "\n\n************** %s [ERROR] ******************\n" % task_tag
-
-		uv_task.fail(status=412, message=error_msg)
-		return
-
 	from lib.Core.Utils.funcs import generateMD5Hash
+	from lib.Worker.Models.fd_screencapper import FoxyDoxxingScreenCapper
+
+	from conf import DEBUG, ANNEX_DIR	
 	from vars import ASSET_TAGS
 
 	asset_path = mention.addAsset(None, "cap_%s.png" % generateMD5Hash(content=mention.url),
@@ -69,13 +45,16 @@ def screenshot_tweet(uv_task):
 	if DEBUG:
 		print "SAVING SCREENCAP TO:"
 		print asset_path
-	
-	from conf import ANNEX_DIR
-	
-	browser.save_screenshot(os.path.join(ANNEX_DIR, asset_path))
-	
-	browser.quit()
-	display.stop()
+
+	cap = FoxyDoxxingScreenCapper(mention.url, asset_path)
+	if not cap.success:
+		error_msg = "Trouble screenshotting: %s" % e
+
+		print error_msg
+		print "\n\n************** %s [ERROR] ******************\n" % task_tag
+
+		uv_task.fail(status=412, message=error_msg)
+		return
 
 	mention.addCompletedTask(uv_task.task_path)
 	uv_task.routeNext()

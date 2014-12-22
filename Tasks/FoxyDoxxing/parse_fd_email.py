@@ -30,7 +30,7 @@ def parse_FD_email(uv_task):
 
 	in_reply_valid = False
 	try:
-		validaton = [h['value'] for h in email['headers'] if h['name'] == "In-Reply-To"][0]
+		validation = [h['value'] for h in email['headers'] if h['name'] == "In-Reply-To"][0]
 		in_reply_valid = re.match(r'.*\.twitter\.com>$', validation) is not None
 	except Exception as e:
 		if DEBUG:
@@ -132,15 +132,17 @@ def parse_FD_email(uv_task):
 	from time import time
 	from lib.Worker.Models.dl_twitterer import DLTwitterer
 
-	mention.source = DLTwitterer(inflate={'screen_name' : m_source})
+	mention.user_source = DLTwitterer(inflate={'screen_name' : m_source})
+	mention.user_source.pull_avitar()
+
 	if DEBUG:
 		print "MENTION SOURCE:"
-		print mention.source.emit()
+		print mention.user_source.emit()
 
-	mention.target = DLTwitterer(inflate={'screen_name' : m_target})
+	mention.user_target = DLTwitterer(inflate={'screen_name' : m_target})
 	if DEBUG:
 		print "MENTION TARGET:"
-		print mention.target.emit()
+		print mention.user_target.emit()
 
 	mention.save()
 

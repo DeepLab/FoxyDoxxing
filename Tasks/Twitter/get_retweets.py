@@ -22,7 +22,7 @@ def get_retweets(uv_task):
 		uv_task.fail(status=412, message=error_msg)
 		return
 
-	retweets = mention.get_retweets():
+	retweets = mention.get_retweets()
 	if type(retweets) is list:
 		from lib.Worker.Models.dl_twitterer import DLTwitterer
 
@@ -37,6 +37,5 @@ def get_retweets(uv_task):
 		mention.save()
 
 	mention.addCompletedTask(uv_task.task_path)
-	uv_task.routeNext()
 	print "\n\n************** %s [END] ******************\n" % task_tag
 	uv_task.finish()
