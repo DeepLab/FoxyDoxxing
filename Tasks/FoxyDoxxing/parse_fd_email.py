@@ -31,7 +31,8 @@ def parse_FD_email(uv_task):
 	in_reply_valid = False
 	try:
 		validation = [h['value'] for h in email['headers'] if h['name'] == "In-Reply-To"][0]
-		in_reply_valid = re.match(r'.*\.twitter\.com>$', validation) is not None
+		print validation
+		in_reply_valid = re.match(r'.*[\.|@]twitter\.com>$', validation) is not None
 	except Exception as e:
 		if DEBUG:
 			print e, type(e)
