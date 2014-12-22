@@ -11,7 +11,7 @@ from vars import EmitSentinel, ASSET_TAGS
 from conf import DEBUG, ANNEX_DIR
 
 class DLTwitterer(UnveillanceDocument, TwitterClient):
-	def __init__(self, inflate=None, _id=None):
+	def __init__(self, inflate=None, _id=None, auto_pull=False):
 		emit_sentinels = [
 			EmitSentinel("config", "dict", None), 
 			EmitSentinel("service", "Api", None),
@@ -34,6 +34,7 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 			for i in ['id', 'profile_image_url', 'entities', 'friends_count', 'followers_count', 'listed_count', 'created_at', 'time_zone']:
 				try:
 					inflate[i] = lookup[i]
+					print "ADDING %s: %s" % (i, inflate[i])
 				except Exception as e:
 					print "COULD NOT GET KEY: %s" % i
 					pass
@@ -41,6 +42,9 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 			inflate['_id'] = generateMD5Hash(content=inflate['id'])
 		
 		UnveillanceDocument.__init__(self, inflate=inflate, _id=_id, emit_sentinels=emit_sentinels)
+		
+		if auto_pull:
+			self.pull_avitar()
 
 	def freeze_current_status(self):
 		# get current status
@@ -61,7 +65,7 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 
 	def pull_avitar(self):
 		print self.emit()
-		
+
 		t = time()
 		avi = self.addAsset(None, "%s_%d.png" % (generateMD5Hash(content=self.profile_image_url), t),
 			description="user's avitar at %d" % t, tags=[ASSET_TAGS['FD_AVI']])
@@ -69,7 +73,6 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 		if avi is None:
 			return False
 
-		print "avi path: %s" % avi
 		with settings(warn_only=True):
 			local("wget -O %s %s" % (os.path.join(ANNEX_DIR, avi), self.profile_image_url))
 

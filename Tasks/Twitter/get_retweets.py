@@ -30,7 +30,7 @@ def get_retweets(uv_task):
 			mention.retweets = []
 		
 		mention.retweets.extend([{
-			'dl_twitterer' : DLTwitterer(inflate={'screen_name' : rt['user']['screen_name']})._id,
+			'dl_twitterer' : DLTwitterer(inflate={'screen_name' : rt['user']['screen_name']}, auto_pull=True)._id,
 			'source' : rt['source'],
 			'tweet_id' : rt['id_str']} for rt in retweets])
 

@@ -20,7 +20,7 @@ class FoxyDoxxingScreenCapper(object):
 					service_args=["--ignore-ssl-errors=true", "--ssl-protocol=tlsv1"])
 
 			if DEBUG:
-				print "getting screencap at %s" % mention.url
+				print "getting screencap at %s" % url
 		
 			browser.get(url)
 		except Exception as e:

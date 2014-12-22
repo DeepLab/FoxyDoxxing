@@ -6,7 +6,8 @@
 		"GM_LSI" : "gensim_lsi_model",
 		"GM_TOPICS" : "gensim_lsi_topics",
 		"IMAGE_CVEC" : "libpuzzle_vector",
-		"FD_CAP" : "foxydoxxing_screen_capture"
+		"FD_CAP" : "foxydoxxing_screen_capture",
+		"FD_AVI" : "twitter_avitar"
 	},
 	"ELASTICSEARCH_MAPPING_STUBS": {
 		"dl_fd_mention_content_text" : {
@@ -69,10 +70,12 @@
 	},
 	"MIME_TYPES" : {
 		"fd_email" : "foxydoxxing/email",
-		"png" : "image/png"
+		"png" : "image/png",
+		"fd_twitterer" : "foxydoxxing/twitterer"
 	},
 	"MIME_TYPE_MAP" : {
 		"foxydoxxing/email" : "fd_email",
+		"foxydoxxing/twitterer" : "fd_twitterer",
 		"image/png" : "png"
 	},
 	"MIME_TYPE_TASKS" : {

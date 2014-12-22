@@ -48,7 +48,7 @@ def screenshot_tweet(uv_task):
 
 	cap = FoxyDoxxingScreenCapper(mention.url, asset_path)
 	if not cap.success:
-		error_msg = "Trouble screenshotting: %s" % e
+		error_msg = "Trouble screenshotting"
 
 		print error_msg
 		print "\n\n************** %s [ERROR] ******************\n" % task_tag

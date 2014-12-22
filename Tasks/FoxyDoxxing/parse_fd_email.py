@@ -132,8 +132,7 @@ def parse_FD_email(uv_task):
 	from time import time
 	from lib.Worker.Models.dl_twitterer import DLTwitterer
 
-	mention.user_source = DLTwitterer(inflate={'screen_name' : m_source})
-	mention.user_source.pull_avitar()
+	mention.user_source = DLTwitterer(inflate={'screen_name' : m_source}, auto_pull=True)
 
 	if DEBUG:
 		print "MENTION SOURCE:"
