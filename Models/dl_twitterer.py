@@ -81,7 +81,7 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 
 		try:
 			cvec = puzz.get_cvec_from_file(os.path.join(ANNEX_DIR, avi))
-			self.addAsset(cvec, "avitar_image_cvec.json", as_literal=False, tags=[ASSET_TAGS['IMAGE_CVEC']])
+			self.addAsset(cvec, "avitar_image_cvec_%d.json" % t, as_literal=False, tags=[ASSET_TAGS['IMAGE_CVEC']])
 			return True
 		except Exception as e:
 			if DEBUG:
