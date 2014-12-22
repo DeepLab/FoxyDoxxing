@@ -29,10 +29,14 @@ def get_retweets(uv_task):
 		if not hasattr(mention, "retweets"):
 			mention.retweets = []
 		
-		mention.retweets.extend([{
-			'dl_twitterer' : DLTwitterer(inflate={'screen_name' : rt['user']['screen_name']}, auto_pull=True)._id,
+		retweets = [{'dl_twitterer' : DLTwitterer(inflate={'screen_name' : rt['user']['screen_name']})._id,
 			'source' : rt['source'],
-			'tweet_id' : rt['id_str']} for rt in retweets])
+			'tweet_id' : rt['id_str']} for rt in retweets]
+
+		for rt in retweets:
+			if rt['dl_twitterer'] not in mention.retweets:
+				mention.retweets.append(rt)
+				DLTwitterer(_id=rt['dl_twitterer']).pull_avitar()
 
 		mention.save()
 
