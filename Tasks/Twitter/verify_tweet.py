@@ -75,28 +75,13 @@ def verify_tweet(uv_task):
 		uv_task.fail(status=412, message=error_msg)
 		return
 
-	tweet_text_set = ['js-tweet-text', 'tweet-text']
-	for p in div.find_all('p'):
-		if 'class' in p.attrs.keys() and len(set(p.attrs['class']).intersection(tweet_text_set)) == len(p.attrs['class']):
-			print p
-			try:
-				original_tweet = [c for c in p.children if type(c) is element.NavigableString][0]
-			except Exception as e:
-				pass
-
-			break
-
-	if original_tweet is None:
-		error_msg = "Could not extract original tweet"
-
-		print error_msg
-		print "\n\n************** %s [ERROR] ******************\n" % task_tag
-		
-		uv_task.fail(status=412, message=error_msg)
-		return
-
-	mention.tweet = original_tweet
 	mention.tweet_id = div.attrs['data-item-id']
+	try:
+		mention.tweet_text = mention.raw_request("statuses/show.json?id=%s" % mention.tweet_id)['text']
+	except Exception as e:
+		print "could not get original tweet text: %s" % e
+		print "\n\n************** %s [WARN] ******************\n" % task_tag
+
 	mention.save()
 
 	mention.set_stats()

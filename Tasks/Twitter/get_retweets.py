@@ -34,7 +34,7 @@ def get_retweets(uv_task):
 			'tweet_id' : rt['id_str']} for rt in retweets]
 
 		for rt in retweets:
-			if rt['dl_twitterer'] not in mention.retweets:
+			if rt['tweet_id'] not in [t['tweet_id'] for t in mention.retweets]:
 				mention.retweets.append(rt)
 				DLTwitterer(_id=rt['dl_twitterer']).pull_avitar()
 

@@ -41,6 +41,11 @@ class TwitterClient(object):
 
 			if int(r['status']) == 200:
 				return loads(res)
+
+			if DEBUG:
+				print r
+				print res
+		
 		except Exception as e:
 			if DEBUG:
 				print e, type(e)
