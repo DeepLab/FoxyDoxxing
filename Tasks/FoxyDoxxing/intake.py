@@ -34,8 +34,12 @@ def do_FD_intake(uv_task):
 	}
 
 	if client.last_update > 0:
-		yesterday = (date.today() - timedelta(1)).strftime("%m/%d/%Y")
-		q.update({'q' : { 'after' : yesterday }})
+		yesterday = (date.today() - timedelta(1)).strftime("%Y/%m/%d")
+		q.update({'q' : "after:%s" % yesterday})
+
+	if DEBUG:
+		print "QUERY TO GMAIL:"
+		print q
 
 	try:
 		res = client.service.users().messages().list(**q).execute()

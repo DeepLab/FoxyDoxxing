@@ -23,8 +23,15 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 			if 'screen_name' not in inflate.keys():
 				return
 
-			lookup = self.lookup_user(screen_name=inflate['screen_name']).AsDict()
-			print lookup
+			try:
+				lookup = self.lookup_user(screen_name=inflate['screen_name']).AsDict()
+				print lookup
+			except Exception as e:
+				if DEBUG:
+					print "COULD NOT LOOKUP TWIITERER:"
+					print e, type(e)
+
+				return
 
 			if 'file_name' not in inflate.keys():
 				inflate['file_name'] = "%s.json" % inflate['screen_name']
