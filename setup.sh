@@ -28,11 +28,12 @@ python setup.py
 
 cd $THIS_DIR/lib/Annex/lib/Worker/Tasks
 ln -s $THIS_DIR/Tasks/* .
-ls -la
 
 cd ../Models
 ln -s $THIS_DIR/Models/* .
-ls -la
+
+cd ../Utils
+ln -s $THIS_DIR/Funcs/* .
 
 cd $THIS_DIR/lib/Annex
 chmod 0400 conf/*

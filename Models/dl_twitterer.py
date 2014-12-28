@@ -1,13 +1,17 @@
 import os, json
 from time import time
+from copy import deepcopy
+from urllib import quote_plus
 from fabric.api import settings, local
 
 from lib.Worker.Models.uv_document import UnveillanceDocument
 from lib.Worker.Models.dl_twitter_client import TwitterClient
 
+from Utils.funcs import build_els_query
+from lib.Worker.Utils.build_relations import build_relations
 from lib.Core.Utils.funcs import generateMD5Hash
 
-from vars import EmitSentinel, ASSET_TAGS
+from vars import EmitSentinel, ASSET_TAGS, MIME_TYPES, QUERY_DEFAULTS
 from conf import DEBUG, ANNEX_DIR
 
 class DLTwitterer(UnveillanceDocument, TwitterClient):
@@ -47,6 +51,12 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 					pass
 			
 			inflate['_id'] = generateMD5Hash(content=inflate['id'])
+			
+			if 'created_at' in inflate.keys():
+				from time import mktime
+				from dateutil.parser import parse
+
+				inflate['created_at_ts'] = mktime(parse(inflate['created_at']).timetuple())
 		
 		UnveillanceDocument.__init__(self, inflate=inflate, _id=_id, emit_sentinels=emit_sentinels)
 		
@@ -69,6 +79,54 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 			description="user's status (text) at %d" % time())
 
 		return status is not None
+
+	def freeze_relationships(self, contexts):
+		relations_set = []
+
+		if type(contexts) is not list:
+			contexts = [context]
+
+		for context in contexts:
+			if context.__class__.__name__ != "DLTwitterer" and type(context) in [str, unicode]:
+				context = DLTwitterer(_id=context)
+
+			if context.__class__.__name__ != "DLTwitterer":
+				continue
+
+			mentions = context.get_active_mentions()
+			if mentions is None:
+				continue
+
+			for mention in mentions:
+				for facet in ['retweets', 'favorites']:
+					if facet in mention.keys():
+						relations_set.update([t['dl_twitterer'] for t in mention[facet]])
+
+			relations_set.append(context._id)
+
+		if len(relations_set) > 0:
+			relations_set = build_relations(list(set(relations_set)))
+			if relations_set is None:
+				return False
+
+			self.relations_set = relations_set
+			self.save()
+			return True
+
+		return False
+
+	def get_active_mentions(self):
+		# query db for instances where target is self
+		query = build_els_query({
+			'mime_type' : MIME_TYPES['fd_email'],
+			'user_target' : self._id })
+
+		mentions = self.query(query[0], **query[1])
+		
+		if mentions is not None:
+			return mentions['documents']
+
+		return None
 
 	def pull_avitar(self):
 		print self.emit()
@@ -95,6 +153,30 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 				print "Could not get image vector because %s" % e
 
 		return False
+
+	def get_friendship(self, target):
+		try:
+			return self.raw_request(
+				"friendships/show.json?source_screen_name=%s&target_screen_name=%s" % (self.screen_name, target))
+		except Exception as e:
+			if DEBUG:
+				print "Could not get friends list because %s" % e
+
+		return None
+
+	def search_tweets_for(self, terms):
+		try:
+			q = quote_plus("from:%s %s" % (self.screen_name, terms))
+			
+			if DEBUG:
+				print "SEARCH TWEETS WITH PARAMS: %s" % q
+
+			return self.raw_request("search/tweets.json?q=%s" % q)
+		except Exception as e:
+			if DEBUG:
+				print "Could not search tweets for user because %s" % e
+
+		return None
 
 	def lookup_user(self, screen_name=None):
 		if screen_name is None:

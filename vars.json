@@ -33,22 +33,6 @@
 		}
 	},
 	"QUERY_DEFAULTS" : {
-		"DL_FD_MENTION_CONTENT_TEXT" : {
-			"bool" : {
-				"must_not" : [
-					{
-						"constant_score" : {
-							"filter" : {
-								"missing" : {
-									"field" : "dl_fd_mention_content_text.media_id"
-								}
-							}
-						}
-					}
-				],
-				"must" : []
-			}
-		},
 		"DL_TWITTERER" : {
 			"bool" : {
 				"must_not" : [
@@ -56,17 +40,20 @@
 						"constant_score" : {
 							"filter" : {
 								"missing" : {
-									"field" : "dl_twitterer.screen_name"
+									"field" : "screen_name"
 								}
 							}
 						}
 					}
 				]
 			}
+		},
+		"FD_MENTION_BY_USER" : {
 		}
 	},
 	"QUERY_KEYS" : {
-		"filter_terms" : ["index_in_parent"]
+		"filter_terms" : ["screen_name", "user_source", "user_target", "tweet_id"],
+		"range" : ["created_at_ts"]
 	},
 	"MIME_TYPES" : {
 		"fd_email" : "foxydoxxing/email",

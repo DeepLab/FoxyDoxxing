@@ -31,6 +31,7 @@ def get_retweets(uv_task):
 		
 		retweets = [{'dl_twitterer' : DLTwitterer(inflate={'screen_name' : rt['user']['screen_name']})._id,
 			'source' : rt['source'],
+			'created_at' : rt['created_at'],
 			'tweet_id' : rt['id_str']} for rt in retweets]
 
 		for rt in retweets:
