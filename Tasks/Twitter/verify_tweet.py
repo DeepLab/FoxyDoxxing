@@ -90,7 +90,7 @@ def verify_tweet(uv_task):
 
 	# tweet is valid.  check its retweets every 10 minutes for 24 hours
 	from time import time
-	uv_task.set_recurring("Twitter.get_retweets.get_retweets", 2, time() + (6 * 60), salt="doc_id")
+	uv_task.set_recurring("Twitter.get_retweets.get_retweets", 15, time() + (24 * 60 * 60), salt="doc_id")
 
 	uv_task.routeNext()
 
