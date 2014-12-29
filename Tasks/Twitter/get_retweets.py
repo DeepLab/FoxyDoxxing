@@ -25,6 +25,7 @@ def get_retweets(uv_task):
 	retweets = mention.get_retweets()
 	if type(retweets) is list:
 		from lib.Worker.Models.dl_twitterer import DLTwitterer
+		from lib.Worker.Utils.build_relations import build_relations
 
 		if not hasattr(mention, "retweets"):
 			mention.retweets = []
@@ -42,7 +43,13 @@ def get_retweets(uv_task):
 				dl_twitterer = DLTwitterer(_id=rt['dl_twitterer'])
 				dl_twitterer.pull_avitar()
 
+				if relations_map is None:
+					continue
+
 				if dl_twitterer._id in relations_map.keys():
+					if not hasattr(dl_twitterer, "relations_map"):
+						dl_twitterer.relations_map = {}
+						
 					dl_twitterer.relations_map.update(relations_map[dl_twitterer._id])
 					dl_twitterer.save()
 

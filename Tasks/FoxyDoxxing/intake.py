@@ -58,9 +58,9 @@ def do_FD_intake(uv_task):
 		error_msg = "no messages received"
 
 		print error_msg
-		print "\n\n************** %s [ERROR] ******************\n" % task_tag
+		print "\n\n************** %s [END] ******************\n" % task_tag
 		
-		uv_task.fail(message=error_msg)
+		uv_task.finish()
 		return
 
 	client.set_last_update(time())
