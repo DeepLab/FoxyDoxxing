@@ -48,6 +48,7 @@ def build_report(uv_task):
 	# 15 minutes
 	bin_period = 15 * 60
 	report = {}
+	relations_set = []
 
 	# get all retweets and favorites
 	# {"tweet_type" : {relative_timestamp, [interactions]}}
@@ -64,30 +65,28 @@ def build_report(uv_task):
 			print "\n\n************** %s [WARN] ******************\n" % task_tag
 			continue
 
-		report[interaction_type] = {}
-
 		for e in events:
+			e['interaction_type'] = interaction_type
 			e_timestamp = mktime(parse(e['created_at']).timetuple())
 			bin = m_start + (int(abs(e_timestamp - m_start)/bin_period) * bin_period)
 			bin_key = "relative_timestamp_%d" % bin
 
-			if bin_key not in report[interaction_type].keys():
-				report[interaction_type][bin_key] = []
+			if 'interactions' not in report.keys():
+				report['interactions'] = {}
 
-			report[interaction_type][bin_key].append(e)
+			if bin_key not in report['interactions'].keys():
+				report['interactions'][bin_key] = []
+			
+			report['interactions'][bin_key].append(e)
+			relations_set.append(e['dl_twitterer'])
 
-			# profile the key players for this event
-			if 'parties' not in report.keys():
-				report['parties'] = {}
+	if len(relations_set) > 0:
+		from lib.Worker.Utils.build_relations import build_relations
+		report['relations_map'] = build_relations(list(set(relations_set)), update=True)
 
-			if e['dl_twitterer'] not in report['parties'].keys():
-				report['parties'][e['dl_twitterer']] = {}
-
-	if 'parties' in report.keys():
-		for p in report['parties']:
-			p = DLTwitterer(_id=p)
-
-			# map relation betweet twitterer and other parties
+	print "\n\n************** %s [INFO] ******************\n" % task_tag
+	print "REPORT:"
+	print report
 
 	from vars import ASSET_TAGS
 	if not uv_task.addAsset(report, "report_%s.json" % uv_task.doc_id, as_literal=False,

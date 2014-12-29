@@ -158,6 +158,7 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 		try:
 			return self.raw_request(
 				"friendships/show.json?source_screen_name=%s&target_screen_name=%s" % (self.screen_name, target))
+
 		except Exception as e:
 			if DEBUG:
 				print "Could not get friends list because %s" % e
@@ -171,7 +172,9 @@ class DLTwitterer(UnveillanceDocument, TwitterClient):
 			if DEBUG:
 				print "SEARCH TWEETS WITH PARAMS: %s" % q
 
-			return self.raw_request("search/tweets.json?q=%s" % q)
+			res = self.raw_request("search/tweets.json?q=%s&result_type=recent&inculde_entities=false&count=100" % q)
+			print res
+			return res
 		except Exception as e:
 			if DEBUG:
 				print "Could not search tweets for user because %s" % e

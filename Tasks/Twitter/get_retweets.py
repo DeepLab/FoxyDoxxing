@@ -4,7 +4,7 @@ from vars import CELERY_STUB as celery_app
 
 @celery_app.task
 def get_retweets(uv_task):
-	task_tag = "TWEETER: GETTING INTERACTIONS"
+	task_tag = "TWEETER: GETTING INTERACTIONS (RETWEETS)"
 
 	print "getting retweets from tweet at %s" % uv_task.doc_id
 	print "\n\n************** %s [START] ******************\n" % task_tag
@@ -34,10 +34,17 @@ def get_retweets(uv_task):
 			'created_at' : rt['created_at'],
 			'tweet_id' : rt['id_str']} for rt in retweets]
 
+		relations_map = build_relations([rt['dl_twitterer'] for rt in retweets])
 		for rt in retweets:
 			if rt['tweet_id'] not in [t['tweet_id'] for t in mention.retweets]:
 				mention.retweets.append(rt)
-				DLTwitterer(_id=rt['dl_twitterer']).pull_avitar()
+				
+				dl_twitterer = DLTwitterer(_id=rt['dl_twitterer'])
+				dl_twitterer.pull_avitar()
+
+				if dl_twitterer._id in relations_map.keys():
+					dl_twitterer.relations_map.update(relations_map[dl_twitterer._id])
+					dl_twitterer.save()
 
 		mention.save()
 
